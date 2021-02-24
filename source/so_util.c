@@ -173,6 +173,8 @@ int so_load(const char *filename, void *base, size_t max_size) {
   load_memrv = virtmemAddReservation(load_virtbase, load_size);
   virtmemUnlock();
 
+  debugPrintf("load base = %p\n", load_virtbase);
+
   // copy segments to where they belong
 
   // text

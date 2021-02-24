@@ -21,10 +21,20 @@
 #include "../util.h"
 #include "../so_util.h"
 
+static ALCcontext *al_ctx = NULL;
+static ALCdevice *al_dev = NULL;
+
 ALCcontext *alcCreateContextHook(ALCdevice *dev, const ALCint *unused) {
   // override 22050hz with 44100hz in case someone wants high quality sounds
   const ALCint attr[] = { ALC_FREQUENCY, 44100, 0 };
-  return alcCreateContext(dev, attr);
+  al_ctx = alcCreateContext(dev, attr); // capture context for later deinit
+  return al_ctx;
+}
+
+ALCdevice *alcOpenDeviceHook(const char *name) {
+  // capture device pointer for later deinit
+  al_dev = alcOpenDevice(name);
+  return al_dev;
 }
 
 void patch_openal(void) {
@@ -156,8 +166,18 @@ void patch_openal(void) {
   hook_arm64(so_find_addr("alcGetThreadContext"), (uintptr_t)alcGetThreadContext);
   hook_arm64(so_find_addr("alcIsExtensionPresent"), (uintptr_t)alcIsExtensionPresent);
   hook_arm64(so_find_addr("alcMakeContextCurrent"), (uintptr_t)alcMakeContextCurrent);
-  hook_arm64(so_find_addr("alcOpenDevice"), (uintptr_t)alcOpenDevice);
+  hook_arm64(so_find_addr("alcOpenDevice"), (uintptr_t)alcOpenDeviceHook);
   hook_arm64(so_find_addr("alcProcessContext"), (uintptr_t)alcProcessContext);
   hook_arm64(so_find_addr("alcSetThreadContext"), (uintptr_t)alcSetThreadContext);
   hook_arm64(so_find_addr("alcSuspendContext"), (uintptr_t)alcSuspendContext);
+}
+
+void deinit_openal(void) {
+  if (al_dev) {
+    if (al_ctx) {
+      alcMakeContextCurrent(NULL);
+      alcDestroyContext(al_ctx);
+    }
+    alcCloseDevice(al_dev);
+  }
 }

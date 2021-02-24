@@ -22,6 +22,7 @@
 // #define DEBUG_LOG 1
 
 typedef struct {
+  int use_bloom;
   int trilinear_filter;
   int msaa;
   int disable_mipmaps;

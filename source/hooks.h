@@ -7,5 +7,6 @@ void patch_game(void);
 void patch_io(void);
 
 void deinit_opengl(void);
+void deinit_openal(void);
 
 #endif

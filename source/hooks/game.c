@@ -85,12 +85,16 @@ char *OS_FileGetArchiveName(int mode) {
 }
 
 void ExitAndroidGame(int code) {
+  // deinit openal
+  deinit_openal();
   // deinit EGL
   deinit_opengl();
   // unmap lib
   so_unload();
   // die
-  exit(0);
+  // exit(0); // doesn't actually exit?
+  extern void NORETURN __libnx_exit(int rc);
+  __libnx_exit(0);
 }
 
 // this is supposed to allocate and return a thread handle struct, but the game never uses it
@@ -281,6 +285,10 @@ float X_DetailLevel_getDebrisProjectileLimitMultiplier(void) {
   return config.debris_limit;
 }
 
+int64_t UseBloom(void) {
+  return config.use_bloom;
+}
+
 void patch_game(void) {
   // configure our supported input layout: all players with standard controller styles
   padConfigureInput(8, HidNpadStyleSet_NpadStandard);
@@ -349,6 +357,9 @@ void patch_game(void) {
   hook_arm64(so_find_addr("_ZN13X_DetailLevel34getDebrisProjectileLimitMultiplierEv"), (uintptr_t)X_DetailLevel_getDebrisProjectileLimitMultiplier);
   hook_arm64(so_find_addr("_ZN13X_DetailLevel23getDecalLimitMultiplierEv"), (uintptr_t)X_DetailLevel_getDecalLimitMultiplier);
   hook_arm64(so_find_addr("_ZN13X_DetailLevel13dropHighesLODEv"), (uintptr_t)X_DetailLevel_getDropHighestLOD);
+
+  // force bloom to our config value
+  hook_arm64(so_find_addr("_Z8UseBloomv"), (uintptr_t)UseBloom);
 
   // crouch toggle
   if (config.crouch_toggle) {

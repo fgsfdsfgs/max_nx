@@ -34,9 +34,14 @@ void NVEventEGLUnmakeCurrent(void) {
 
 int NVEventEGLInit(void) {
   EGLint numConfigs = 0;
-  EGLConfig config;
+  EGLConfig eglConfig;
 
-  static const EGLint configAttribs[] = {
+  const EGLint contextAttribs[] = {
+    EGL_CONTEXT_CLIENT_VERSION, 2,
+    EGL_NONE
+  };
+
+  EGLint configAttribs[] = {
     EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
     EGL_RED_SIZE,     8,
     EGL_GREEN_SIZE,   8,
@@ -44,13 +49,20 @@ int NVEventEGLInit(void) {
     EGL_ALPHA_SIZE,   8,
     EGL_DEPTH_SIZE,   24,
     EGL_STENCIL_SIZE, 8,
+    EGL_NONE,         0, // space for EGL_SAMPLE_BUFFERS
+    EGL_NONE,         0, // space for EGL_SAMPLES
     EGL_NONE
   };
 
-  static const EGLint contextAttribs[] = {
-    EGL_CONTEXT_CLIENT_VERSION, 2,
-    EGL_NONE
-  };
+  const size_t numConfigAttribs = sizeof(configAttribs) / sizeof(*configAttribs);
+
+  if (config.msaa > 1) {
+    // request multisample buffer if MSAA is enabled
+    configAttribs[numConfigAttribs - 5] = EGL_SAMPLE_BUFFERS;
+    configAttribs[numConfigAttribs - 4] = 1;
+    configAttribs[numConfigAttribs - 3] = EGL_SAMPLES;
+    configAttribs[numConfigAttribs - 2] = config.msaa;
+  }
 
   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
   if (!display) {
@@ -65,19 +77,19 @@ int NVEventEGLInit(void) {
     return 0;
   }
 
-  eglChooseConfig(display, configAttribs, &config, 1, &numConfigs);
+  eglChooseConfig(display, configAttribs, &eglConfig, 1, &numConfigs);
   if (numConfigs <= 0) {
     debugPrintf("EGL: No matching config: %08x\n", eglGetError());
     return 0;
   }
 
-  surface = eglCreateWindowSurface(display, config, nwindowGetDefault(), NULL);
+  surface = eglCreateWindowSurface(display, eglConfig, nwindowGetDefault(), NULL);
   if (!surface) {
     debugPrintf("EGL: Could not create surface: %08x\n", eglGetError());
     return 0;
   }
 
-  context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs);
+  context = eglCreateContext(display, eglConfig, EGL_NO_CONTEXT, contextAttribs);
   if (!context) {
     debugPrintf("EGL: Could not create context: %08x\n", eglGetError());
     return 0;

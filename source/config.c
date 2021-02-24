@@ -14,6 +14,7 @@
 #include "config.h"
 
 #define CONFIG_VARS \
+  CONFIG_VAR_INT(use_bloom); \
   CONFIG_VAR_INT(trilinear_filter); \
   CONFIG_VAR_INT(msaa); \
   CONFIG_VAR_INT(disable_mipmaps); \
@@ -41,8 +42,9 @@ int read_config(const char *file) {
   char line[1024] = { 0 };
 
   memset(&config, 0, sizeof(Config));
+  config.use_bloom = 0;
   config.trilinear_filter = 1;
-  config.msaa = 1;
+  config.msaa = 2; // 2X
   config.disable_mipmaps = 0;
   config.language = 0; // english
   config.crouch_toggle = 1;
