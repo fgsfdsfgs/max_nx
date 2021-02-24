@@ -14,9 +14,10 @@
 #include "config.h"
 
 #define CONFIG_VARS \
+  CONFIG_VAR_INT(screen_width); \
+  CONFIG_VAR_INT(screen_height); \
   CONFIG_VAR_INT(use_bloom); \
   CONFIG_VAR_INT(trilinear_filter); \
-  CONFIG_VAR_INT(msaa); \
   CONFIG_VAR_INT(disable_mipmaps); \
   CONFIG_VAR_INT(language); \
   CONFIG_VAR_INT(crouch_toggle); \
@@ -27,6 +28,10 @@
   CONFIG_VAR_STR(mod_file);
 
 Config config;
+
+// actual screen size that is in use right now
+int screen_width = 1280;
+int screen_height = 720;
 
 static inline void parse_var(const char *name, const char *value) {
   #define CONFIG_VAR_INT(var) if (!strcmp(name, #var)) { config.var = atoi(value); return; }
@@ -42,14 +47,15 @@ int read_config(const char *file) {
   char line[1024] = { 0 };
 
   memset(&config, 0, sizeof(Config));
+  config.screen_width = -1; // auto
+  config.screen_height = -1;
   config.use_bloom = 0;
   config.trilinear_filter = 1;
-  config.msaa = 2; // 2X
   config.disable_mipmaps = 0;
   config.language = 0; // english
   config.crouch_toggle = 1;
   config.character_shadows = 1; // 1 - one blob; 2 - foot shadows
-  config.drop_highest_lod = 1; // does this even do anything?
+  config.drop_highest_lod = 0; // does this even do anything?
   config.decal_limit = 0.5f;
   config.debris_limit = 1.0f;
 

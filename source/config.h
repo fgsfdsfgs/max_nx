@@ -16,15 +16,17 @@
 #define CONFIG_NAME "config.txt"
 #define LOG_NAME "debug.log"
 
-#define SCREEN_W 1280
-#define SCREEN_H 720
-
 // #define DEBUG_LOG 1
 
+// actual screen size
+extern int screen_width;
+extern int screen_height;
+
 typedef struct {
+  int screen_width;
+  int screen_height;
   int use_bloom;
   int trilinear_filter;
-  int msaa;
   int disable_mipmaps;
   int language;
   int crouch_toggle;

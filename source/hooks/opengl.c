@@ -41,7 +41,7 @@ int NVEventEGLInit(void) {
     EGL_NONE
   };
 
-  EGLint configAttribs[] = {
+  const EGLint configAttribs[] = {
     EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
     EGL_RED_SIZE,     8,
     EGL_GREEN_SIZE,   8,
@@ -49,20 +49,12 @@ int NVEventEGLInit(void) {
     EGL_ALPHA_SIZE,   8,
     EGL_DEPTH_SIZE,   24,
     EGL_STENCIL_SIZE, 8,
-    EGL_NONE,         0, // space for EGL_SAMPLE_BUFFERS
-    EGL_NONE,         0, // space for EGL_SAMPLES
     EGL_NONE
   };
 
-  const size_t numConfigAttribs = sizeof(configAttribs) / sizeof(*configAttribs);
+  NWindow *win = nwindowGetDefault();
 
-  if (config.msaa > 1) {
-    // request multisample buffer if MSAA is enabled
-    configAttribs[numConfigAttribs - 5] = EGL_SAMPLE_BUFFERS;
-    configAttribs[numConfigAttribs - 4] = 1;
-    configAttribs[numConfigAttribs - 3] = EGL_SAMPLES;
-    configAttribs[numConfigAttribs - 2] = config.msaa;
-  }
+  nwindowSetDimensions(win, screen_width, screen_height);
 
   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
   if (!display) {
@@ -83,7 +75,7 @@ int NVEventEGLInit(void) {
     return 0;
   }
 
-  surface = eglCreateWindowSurface(display, eglConfig, nwindowGetDefault(), NULL);
+  surface = eglCreateWindowSurface(display, eglConfig, win, NULL);
   if (!surface) {
     debugPrintf("EGL: Could not create surface: %08x\n", eglGetError());
     return 0;

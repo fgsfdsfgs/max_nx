@@ -69,11 +69,11 @@ int AND_SystemInitialize(void) {
 }
 
 int OS_ScreenGetHeight(void) {
-  return SCREEN_H;
+  return screen_height;
 }
 
 int OS_ScreenGetWidth(void) {
-  return SCREEN_W;
+  return screen_width;
 }
 
 char *OS_FileGetArchiveName(int mode) {

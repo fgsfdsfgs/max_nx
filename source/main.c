@@ -95,6 +95,23 @@ static void check_syscalls(void) {
     fatal_error("Own process handle is unavailable.");
 }
 
+static void set_screen_size(int w, int h) {
+  if (w <= 0 || h <= 0 || w > 1920 || h > 1080) {
+    // auto; pick resolution based on docked mode
+    if (appletGetOperationMode() == AppletOperationMode_Console) {
+      screen_width = 1920;
+      screen_height = 1080;
+    } else {
+      screen_width = 1280;
+      screen_height = 720;
+    }
+  } else {
+    screen_width = w;
+    screen_height = h;
+  }
+  debugPrintf("screen mode: %dx%d\n", screen_width, screen_height);
+}
+
 int main(void) {
   // try to read the config file and create one with default values if it's missing
   if (read_config(CONFIG_NAME) < 0)
@@ -102,6 +119,9 @@ int main(void) {
 
   check_syscalls();
   check_data();
+
+  // calculate actual screen size
+  set_screen_size(config.screen_width, config.screen_height);
 
   debugPrintf("heap size = %u KB\n", MEMORY_MB * 1024);
   debugPrintf(" lib base = %p\n", heap_so_base);
