@@ -32,6 +32,7 @@ typedef struct {
   int crouch_toggle;
   int character_shadows;
   int drop_highest_lod;
+  int show_weapon_menu;
   float decal_limit;
   float debris_limit;
   char mod_file[0x100];

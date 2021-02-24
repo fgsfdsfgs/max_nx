@@ -53,7 +53,7 @@ int AND_DeviceType(void) {
   // 0x1: phone
   // 0x2: tegra
   // low memory is < 256
-  return (MEMORY_MB << 6) | (3 << 2) | 0x1;
+  return (MEMORY_MB << 6) | (3 << 2) | 0x2;
 }
 
 int AND_DeviceLocale(void) {
@@ -187,6 +187,10 @@ int WarGamepad_GetGamepadButtons(int padnum) {
     mask |= 0x400;
   if (kdown & HidNpadButton_Right)
     mask |= 0x800;
+  if (kdown & HidNpadButton_StickL)
+    mask |= 0x1000;
+  if (kdown & HidNpadButton_StickR)
+    mask |= 0x2000;
 
   return mask;
 }
@@ -360,6 +364,10 @@ void patch_game(void) {
 
   // force bloom to our config value
   hook_arm64(so_find_addr("_Z8UseBloomv"), (uintptr_t)UseBloom);
+
+  // dummy out the weapon menu arrow drawer if it's disabled
+  if (!config.show_weapon_menu)
+    hook_arm64(so_find_addr("_ZN12WeaponSwiper4DrawEv"), (uintptr_t)ret0);
 
   // crouch toggle
   if (config.crouch_toggle) {

@@ -23,6 +23,7 @@
   CONFIG_VAR_INT(crouch_toggle); \
   CONFIG_VAR_INT(character_shadows); \
   CONFIG_VAR_INT(drop_highest_lod); \
+  CONFIG_VAR_INT(show_weapon_menu); \
   CONFIG_VAR_FLOAT(decal_limit); \
   CONFIG_VAR_FLOAT(debris_limit); \
   CONFIG_VAR_STR(mod_file);
@@ -56,6 +57,7 @@ int read_config(const char *file) {
   config.crouch_toggle = 1;
   config.character_shadows = 1; // 1 - one blob; 2 - foot shadows
   config.drop_highest_lod = 0; // does this even do anything?
+  config.show_weapon_menu = 0;
   config.decal_limit = 0.5f;
   config.debris_limit = 1.0f;
 
