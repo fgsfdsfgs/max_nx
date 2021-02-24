@@ -57,7 +57,7 @@ CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 
 CXXFLAGS	:= $(CFLAGS)
 
-ASFLAGS	:=	-g3 $(ARCH)
+ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 LIBS	:= -lopenal -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau -lnx -lm
