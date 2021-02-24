@@ -26,7 +26,7 @@ To install:
 2. Extract **the contents of** the `assets` folder from your `.apk` to `/switch/maxpayne/`.
 3. Extract `lib/arm64-v8a/libMaxPayne.so` from your `.apk` to `/switch/maxpayne/`.
 4. Extract the contents of the `.obb` file into `/switch/maxpayne/`. You can skip all the `.msf` files except for `MaxPayneSoundsv2.msf` and any extra languages that you want.
-5. Extract the contents of the `data.zip` from the latest release into `/switch/maxpayne/`. Replace everything.
+5. Extract the contents of the `.zip` file from the latest release into `/switch/maxpayne/`. Replace everything.
 
 ### Notes
 
