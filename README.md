@@ -41,7 +41,7 @@ The game will show an error message if it detects that anything is wrong. Please
 If the error says `Could not find symbol ...`, that likely means you have the wrong `.apk` or `.so` file. You need version 1.7, others **will not work**.
 Make sure also that you've extracted `libMaxPayne.so` from the `arm64-v8a` subfolder.
 
-If the game crashes on startup, please post an issue with your last crash dump attached.
+If the game crashes on startup, please post an issue with your last crash report attached.
 
 ### How to build
 
