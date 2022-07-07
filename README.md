@@ -1,6 +1,7 @@
 ## Max Payne Mobile Nintendo Switch port
 
 This is a wrapper/port of the Android version of Max Payne Mobile. It loads the original game binary, patches it and runs it.
+It's basically as if we emulate a minimalist Android environment in which we natively run the original Android binary as is.
 This is probably not entirely stable yet, so expect issues.
 
 This is a port of the [PS Vita version](https://github.com/fgsfdsfgs/max_vita) adapted to work on the Switch with AArch64 `.so` files.
